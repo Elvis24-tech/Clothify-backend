@@ -5,7 +5,6 @@ from django.conf import settings
 import base64
 from datetime import datetime
 import json
-# Generate password for STK Push
 def generate_password():
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
     data_to_encode = f"{settings.MPESA_SHORTCODE}{settings.MPESA_PASSKEY}{timestamp}"
@@ -21,8 +20,6 @@ def lipa_na_mpesa(request):
 
         if not amount or not phone_number:
             return JsonResponse({"error": "Amount and phone number required"}, status=400)
-
-        # Get OAuth token
         auth_response = requests.get(
             f"{settings.MPESA_BASE_URL}/oauth/v1/generate?grant_type=client_credentials",
             auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET)
@@ -60,6 +57,6 @@ def lipa_na_mpesa(request):
 @csrf_exempt
 def mpesa_callback(request):
     data = json.loads(request.body)
-    # TODO: update order/payment status in DB
+    # TODO: 
     print("MPESA callback:", data)
     return JsonResponse({"status": "success"})
